@@ -25,4 +25,3 @@ git checkout new-feature                                          #切换到新�
 git commit -a -m "added initial version of page cache"  
 git push remotename new-feature 
 git merge new-feature                                             #把分支合并到主干  
-12123333333333333333333333333333333333333333
