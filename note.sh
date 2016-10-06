@@ -5,6 +5,7 @@ apt-get install nfs-common nfs-kernel-server
 *(rw,sync,no_root_squash,no_subtree_check)
 sudo /etc/init.d/rpcbind restart
 sudo /etc/init.d/nfs-kernel-server restart
+mount -t nfs -o nolock,vers=2 192.168.1.19:/.......
 #vim install
 apt-get install vim
 apt-get install vim-gnome
