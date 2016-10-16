@@ -36,3 +36,6 @@ git merge new-feature                                             #把分支合�
             File systems --->
                 [*]Miscellaneous filesystems --->
                     <*> yaffs2 file system support   
+
+#在编译tslib时出错  ./autogen.sh: 4: ./autogen.sh: autoreconf: not found
+ sudo apt-get install autoconf automake libtoo
