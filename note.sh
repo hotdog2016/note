@@ -48,4 +48,4 @@ make && make DESTDIR=$PWD/tmp install
 sudo cp * /usr/local/arm/4.3.2/arm-none-linux-gnueabi/libc/armv4t/lib -d -rf
 
 #set bootargs noinitrd root=/dev/mtdblock3 init=/linuxrc console=ttySAC0
-set bootargs console=ttySAC0,115200 root=/dev/nfs nfsroot=192.168.1.103:/home/hotdog/armwork/prj/fs_mini_mdev_ne ip=192.168.1.121
+set bootargs console=ttySAC0,115200 root=/dev/nfs nfsroot=192.168.1.103:/home/hotdog/armwork/kernel/fs/fs_mini_mdev ip=192.168.1.121

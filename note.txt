@@ -39,3 +39,8 @@ git merge new-feature                                             #把分支合�
 
 #在编译tslib时出错  ./autogen.sh: 4: ./autogen.sh: autoreconf: not found
  sudo apt-get install autoconf automake libtoo
+
+export GIT_TRACE_PACKET=1
+export GIT_TRACE=1
+export GIT_CURL_VERBOSE=1
+
