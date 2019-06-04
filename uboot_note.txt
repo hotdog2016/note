@@ -1,0 +1,412 @@
+
+
+ifneq ($(CONFIG_SYS_TEXT_BASE),)
+LDFLAGS_u-boot += -Ttext $(CONFIG_SYS_TEXT_BASE)
+endif
+
+ifneq ($(CONFIG_SYS_TEXT_BASE),)
+CPPFLAGS += -DCONFIG_SYS_TEXT_BASE=$(CONFIG_SYS_TEXT_BASE)
+endif
+
+#ifndef CONFIG_SKIP_LOWLEVEL_INIT
+	bl	cpu_init_crit
+#endif
+/****************************************************************************
+//CONFIG_SKIP_LOWLEVEL_INIT 这个宏一般都是不会被定义 解释如下 
+//- CONFIG_SKIP_LOWLEVEL_INIT
+//		[ARM, NDS32, MIPS only] If this variable is defined, then certain
+//		low level initializations (like setting up the memory
+//		controller) are omitted and/or U-Boot does not
+//		relocate itself into RAM.
+//
+//		Normally this variable MUST NOT be defined. The only
+//		exception is when U-Boot is loaded (to RAM) by some
+//		other boot loader or by a debugger which performs
+//		these initializations itself.
+//cpu_init_crit :做一些对SDRAM的初始化 为后面重定位代码和设置堆栈做准备
+//对RAM的初始化代码在lowlevel_init里面
+*****************************************************************************/
+
+board_init_f
+两个重要的初始化相关数据结构
+???????gd定义的位置和方式
+1.gd_t
+typedef	struct	global_data {
+	bd_t		*bd;
+	unsigned long	flags;
+	unsigned long	baudrate;
+	unsigned long	have_console;	/* serial_init() was called */
+	unsigned long	env_addr;	/* Address  of Environment struct */
+	unsigned long	env_valid;	/* Checksum of Environment valid? */
+	unsigned long	fb_base;	/* base address of frame buffer */
+	unsigned long	relocaddr;	/* Start address of U-Boot in RAM */
+	phys_size_t	ram_size;	/* RAM size */
+	unsigned long	mon_len;	/* monitor len */
+	unsigned long	irq_sp;		/* irq stack pointer */
+	unsigned long	start_addr_sp;	/* start_addr_stackpointer */
+	unsigned long	reloc_off;
+	unsigned long	tlb_addr;
+	const void	*fdt_blob;	/* Our device tree, NULL if none */
+	void		**jt;		/* jump table */
+	char		env_buf[32];	/* buffer for getenv() before reloc. */
+}
+2.bd_t
+typedef struct bd_info {
+    int			bi_baudrate;	/* serial console baudrate */
+    unsigned long	bi_ip_addr;	/* IP Address */
+    ulong	        bi_arch_number;	/* unique id for this board */
+    ulong	        bi_boot_params;	/* where this board expects params */
+	unsigned long	bi_arm_freq; /* arm frequency */
+	unsigned long	bi_dsp_freq; /* dsp core frequency */
+	unsigned long	bi_ddr_freq; /* ddr frequency */
+    struct				/* RAM configuration */
+    {
+	ulong start;
+	ulong size;
+    }			bi_dram[CONFIG_NR_DRAM_BANKS];
+} bd_t;
+
+有一个初始化队列  进行一些基本的初始化
+init_fnc_t *init_sequence[] = {
+	timer_init,		/* initialize timer */
+	env_init,		/* initialize environment */
+	init_baudrate,		/* initialze baudrate settings */
+	serial_init,		/* serial communications setup */
+	console_init_f,		/* stage 1 init of console */
+	display_banner,		/* say that we are here */
+	dram_init,		/* configure available RAM banks */
+	NULL,
+};
+
+#define CONFIG_SERIAL1      1   /* we use SERIAL 1 on SMDK2410 */
+使用串口1
+
+unsigned int board_init_f(ulong bootflag)
+{
+	bd_t *bd;
+	init_fnc_t **init_fnc_ptr;
+	gd_t *id;
+	ulong addr, addr_sp;
+	extern ulong base_sp;
+
+
+	bootstage_mark_name(BOOTSTAGE_ID_START_UBOOT_F, "board_init_f");
+
+	/* Pointer is writable since we allocated a register for it */
+	gd = (gd_t *) ((CONFIG_SYS_INIT_SP_ADDR) & ~0x07);
+	/* compiler optimization barrier needed for GCC >= 3.4 */
+	__asm__ __volatile__("": : :"memory");
+
+	memset((void *)gd, 0, sizeof(gd_t));
+
+	gd->mon_len = _bss_end_ofs;
+
+
+	/* Allow the early environment to override the fdt address */
+	gd->fdt_blob = (void *)getenv_ulong("fdtcontroladdr", 16,
+						(uintptr_t)gd->fdt_blob);
+
+	for (init_fnc_ptr = init_sequence; *init_fnc_ptr; ++init_fnc_ptr) {
+		if ((*init_fnc_ptr)() != 0) {
+			hang ();
+		}
+	}
+
+	debug("monitor len: %08lX\n", gd->mon_len);
+	/*
+	 * Ram is setup, size stored in gd !!
+	 */
+	debug("ramsize: %08lX\n", gd->ram_size);
+
+	addr = CONFIG_SYS_SDRAM_BASE + gd->ram_size;
+
+
+
+	/* reserve TLB table */
+	addr -= (4096 * 4);
+
+	/* round down to next 64 kB limit */
+	addr &= ~(0x10000 - 1);
+
+	gd->tlb_addr = addr;
+	debug("TLB table at: %08lx\n", addr);
+
+	/* round down to next 4 kB limit */
+	addr &= ~(4096 - 1);
+	debug("Top of RAM usable for U-Boot at: %08lx\n", addr);
+
+
+	/*
+	 * reserve memory for U-Boot code, data & bss
+	 * round down to next 4 kB limit
+	 */
+	//addr -= gd->mon_len;
+	//addr &= ~(4096 - 1);
+	addr = CONFIG_SYS_TEXT_BASE;   /* addr = _TEXT_BASE */
+
+	debug("Reserving %ldk for U-Boot at: %08lx\n", gd->mon_len >> 10, addr);
+
+	/*
+	 * reserve memory for malloc() arena
+	 */
+	addr_sp = addr - TOTAL_MALLOC_LEN;
+	debug("Reserving %dk for malloc() at: %08lx\n",
+			TOTAL_MALLOC_LEN >> 10, addr_sp);
+	/*
+	 * (permanently) allocate a Board Info struct
+	 * and a permanent copy of the "global" data
+	 */
+	addr_sp -= sizeof (bd_t);
+	bd = (bd_t *) addr_sp;
+	gd->bd = bd;
+	debug("Reserving %zu Bytes for Board Info at: %08lx\n",
+			sizeof (bd_t), addr_sp);
+
+
+	addr_sp -= sizeof (gd_t);
+	id = (gd_t *) addr_sp;
+	debug("Reserving %zu Bytes for Global Data at: %08lx\n",
+			sizeof (gd_t), addr_sp);
+
+	/* setup stackpointer for exeptions */
+	gd->irq_sp = addr_sp;
+	/* leave 3 words for abort-stack    */
+	addr_sp -= 12;
+
+	/* 8-byte alignment for ABI compliance */
+	addr_sp &= ~0x07;
+
+	debug("New Stack Pointer is: %08lx\n", addr_sp);
+
+
+	gd->bd->bi_baudrate = gd->baudrate;
+	/* Ram ist board specific, so move it to board code ... */
+	dram_init_banksize();
+	display_dram_config();	/* and display it */
+
+	gd->relocaddr = addr;
+	gd->start_addr_sp = addr_sp;
+	gd->reloc_off = addr - _TEXT_BASE;
+	debug("relocation Offset is: %08lx\n", gd->reloc_off);
+	memcpy(id, (void *)gd, sizeof(gd_t));
+
+	base_sp = addr_sp;
+
+	//relocate_code(addr_sp, id, addr);
+	return (unsigned int)id;
+
+	/* NOTREACHED - relocate_code() does not return */
+}
+
+void board_init_r(gd_t *id, ulong dest_addr)
+{
+	ulong malloc_start;
+	ulong flash_size;
+
+	gd = id;
+
+	gd->flags |= GD_FLG_RELOC;	/* tell others: relocation done */
+	bootstage_mark_name(BOOTSTAGE_ID_START_UBOOT_R, "board_init_r");
+
+	monitor_flash_len = _end_ofs;
+
+	/* Enable caches */
+	enable_caches();
+
+	debug("monitor flash len: %08lX\n", monitor_flash_len);
+	board_init();	/* Setup chipselects */
+	/*
+	 * TODO: printing of the clock inforamtion of the board is now
+	 * implemented as part of bdinfo command. Currently only support for
+	 * davinci SOC's is added. Remove this check once all the board
+	 * implement this.
+	 */
+
+	debug("Now running in RAM - U-Boot at: %08lx\n", dest_addr);
+
+
+	/* The Malloc area is immediately below the monitor copy in DRAM */
+	malloc_start = dest_addr - TOTAL_MALLOC_LEN;
+	mem_malloc_init (malloc_start, TOTAL_MALLOC_LEN);
+
+	puts("Flash: ");
+
+	flash_size = flash_init();
+	if (flash_size > 0) {
+		print_size(flash_size, "\n");
+	} else {
+		puts("0 KB\n\r");
+		//puts(failed);
+		//hang();
+	}
+
+	puts("NAND:  ");
+	nand_init();		/* go init the NAND */
+
+
+
+
+	/* initialize environment */
+	env_relocate();
+
+
+	/* IP Address */
+	gd->bd->bi_ip_addr = getenv_IPaddr("ipaddr");
+
+	stdio_init();	/* get the devices list going. */
+
+	jumptable_init();
+
+
+	console_init_r();	/* fully init console as a device */
+
+
+	 /* set up exceptions */
+	interrupt_init();
+	/* enable exceptions */
+	enable_interrupts();
+
+
+	/* Initialize from environment */
+	load_addr = getenv_ulong("loadaddr", 16, load_addr);
+
+
+	run_command("mtdparts default", 0);
+	//mtdparts_init();	
+
+	/* main_loop() can return to retry autoboot, if so just run it again. */
+	for (;;) {
+		main_loop();
+	}
+
+	/* NOTREACHED - no way out of command loop except booting */
+}
+
+void main_loop (void)
+{
+	char *s;
+	int bootdelay;
+
+	u_boot_hush_start ();
+
+	s = getenv ("bootdelay");
+	bootdelay = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
+
+	debug ("### main_loop entered: bootdelay=%d\n\n", bootdelay);
+
+	init_cmd_timeout ();
+
+	s = getenv ("bootcmd");
+
+	debug ("### main_loop: bootcmd=\"%s\"\n", s ? s : "<UNDEFINED>");
+
+	if (bootdelay >= 0 && s && !abortboot (bootdelay)) {
+		run_command(s, 0);
+	}
+
+	/*
+	 * Main Loop for Monitor Command Processing
+	 */
+	parse_file_outer();
+	/* This point is never reached */
+	for (;;);
+}
+define2mk.sed原文中说明：  # Change '1' and empty values to "y" (not perfect, but  # supports conditional compilation in the makefiles 把定义为1或空的宏值转成y，这就
+是y的成因！ 值得注意的是define2mk.sed原文：  # ... and from configs defined from other configs  s/="CONFIG[A−Za−z0−9][A−Za−z0−9]∗"/=$(\1)/; 这些需要转换的宏，必须是\
+CONFIG_开头的 "]]"""''
+
+
+
+start.S
+    start_code
+        cpu_init_crit 
+            lowlevel_init //lowlevel_init.S in your board directory
+        nand_init_ll  //(board/samsung/smdk2440/init.c)
+        copy_code_to_sdram  //(board/samsung/smdk2440/init.c)
+        clear_bss  //(board/samsung/smdk2440/init.c)
+        board_init_f
+        	timer_init// initialize timer (arch/arm/cpu/arm920t/s3c24x0/timer.c)
+        	env_init// initialize environment (common/env_nand.c)
+        	init_baudrate//arch/arm/lib/board.c
+        	serial_init//drivers/serial/serial_s3c24x0.c
+        	console_init_f/* stage 1 init of console */ common/console.c 
+	            print_pre_console_buffer
+        	display_banner,	/* say that we are here*/ //arch/arm/lib/board.c 
+        	dram_init,//board/samsung/smdk2440/smdk2410.c	/* configure available RAM banks */
+        	/* Ram ist board specific, so move it to board code ... */
+        	dram_init_banksize();//arch/arm/lib/board.c 
+        	display_dram_config();	/* and display it */ //arch/arm/lib/board.c 
+        board_init_r
+	        bootstage_mark_name//common/bootstage.c 
+	        enable_caches            //arch/arm/lib/cache.c
+	        board_init()             //board/samsung/smdk2440/smdk2440.c 
+	        mem_malloc_init               //common/dlmalloc.c
+            flash_init()         //drivers/mtd/cfi_flash.c 
+	        nand_init();	      //drivers/mtd/nand/nand.c
+	        env_relocate()         /* initialize environment */  //common/env_common.c 
+	        stdio_init();	       /* get the devices list going. */ //common/stdio.c 
+	        jumptable_init();        //common/exports.c
+	        console_init_r();       /*fully init console as a device */ //common/console.c <<console_init_r>>
+	        /* set up exceptions */
+	        interrupt_init();           //arch/arm/lib/interrupts.c
+	                                  /* enable exceptions */
+	        enable_interrupts();            //arch/arm/lib/interrupts.c
+	        /* Initialize from environment */
+	        load_addr = getenv_ulong("loadaddr", 16, load_addr);
+	        run_command("mtdparts default", 0);
+	        //mtdparts_init();	
+	        /* main_loop() can return to retry autoboot, if so just run it again. */
+	        for (;;) {
+	        	main_loop();//common/main.c
+	        }
+
+
+
+
+const uchar default_environment[] = {
+#ifdef	CONFIG_BOOTARGS
+	"bootargs="	CONFIG_BOOTARGS			"\0"
+#endif
+#ifdef	CONFIG_BOOTCOMMAND
+	"bootcmd="	CONFIG_BOOTCOMMAND		"\0"
+#endif
+#if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
+	"bootdelay="	MK_STR(CONFIG_BOOTDELAY)	"\0"
+#endif
+#if defined(CONFIG_BAUDRATE) && (CONFIG_BAUDRATE >= 0)
+	"baudrate="	MK_STR(CONFIG_BAUDRATE)		"\0"
+#endif
+#ifdef	CONFIG_ETHADDR
+	"ethaddr="	MK_STR(CONFIG_ETHADDR)		"\0"
+#endif
+#ifdef	CONFIG_IPADDR
+	"ipaddr="	MK_STR(CONFIG_IPADDR)		"\0"
+#endif
+#ifdef	CONFIG_SERVERIP
+	"serverip="	MK_STR(CONFIG_SERVERIP)		"\0"
+#endif
+#ifdef	CONFIG_NETMASK
+	"netmask="	MK_STR(CONFIG_NETMASK)		"\0"
+#endif
+	"\0"
+};
+
+
+
+
+
+
+
+
+#define CONFIG_NR_DRAM_BANKS	1          /* we have 1 bank of DRAM */
+#define PHYS_SDRAM_1		0x30000000 /* SDRAM Bank #1 */
+#define PHYS_SDRAM_1_SIZE	0x04000000 /* 64 MB */
+
+
+#define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1 0x30000000
+#define CONFIG_SYS_INIT_SP_ADDR	(0x30000000 + 0x1000 - \
+				128)    0x30000F80
+
+
+#define CONFIG_SYS_MALLOC_LEN	(4 * 1024 * 1024) 4MB
+
