@@ -1,0 +1,46 @@
+ssh -T git@github.com
+
+git clone git://github.com:xxxx/test.git                          #以gitreadonly方式克隆到本地，只可以读  
+git clone git@github.com:xxx/test.git                             #以SSH方式克隆到本地，可以读写  
+git clone https://github.com/xxx/test.git                         #以https方式克隆到本地，可以读写  
+git fetch git@github.com:xxx/xxx.git                              #获取到本地但不合并  
+git pull git@github.com:xxx/xxx.git                               #获取并合并内容到本地 
+
+git config --global user.name 'onovps'  
+git config --global user.email 'onovps@onovps.com'                #全局联系方式，可选 
+
+git init                                                          #初始化一个本地库  
+git add xxx                                                       #添加文件到本地仓库  
+git commit -m "first commit"                                      #提交到本地库并备注，此时变更仍在本地。  
+git commit -a                                                     #自动更新变化的文件，a可以理解为auto  
+git remote add xxx git@github.com:xxx/xxx.git                     #增加一个远程服务器的别名。  
+git remote rm xxx                                                 #删除远程版本库的别名  
+git push -u remotename master
+
+git branch                                                        #显示当前分支是master  
+git branch new-feature                                            #创建分支  
+git branch -D xxx                                                 #删除branch
+git checkout new-feature                                          #切换到新分支  
+
+git commit -a -m "added initial version of page cache"  
+git push remotename new-feature 
+git merge new-feature                                             #把分支合并到主干  
+
+获取yaffs2源码
+        # git clone git://www.aleph1.co.uk/yaffs2
+    给内核打yaffs2补丁，参考readme
+        # cd yaffs2
+        # ./patch-ker.sh c m /work/kernel/linux-3.4.2
+    配置内核使其支持yaffs2文件系统
+        # make menuconfig
+            File systems --->
+                [*]Miscellaneous filesystems --->
+                    <*> yaffs2 file system support   
+
+#在编译tslib时出错  ./autogen.sh: 4: ./autogen.sh: autoreconf: not found
+ sudo apt-get install autoconf automake libtoo
+
+export GIT_TRACE_PACKET=1
+export GIT_TRACE=1
+export GIT_CURL_VERBOSE=1
+
