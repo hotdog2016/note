@@ -410,3 +410,921 @@ const uchar default_environment[] = {
 
 #define CONFIG_SYS_MALLOC_LEN	(4 * 1024 * 1024) 4MB
 
+U-Boot code: 33F00000 -> 33F394D4  BSS: -> 33F3F3C4
+CPUID: 32440001
+FCLK:      400 MHz
+HCLK:      100 MHz
+PCLK:       50 MHz
+monitor len: 0003F3C4
+ramsize: 04000000
+TLB table at: 33ff0000
+Top of RAM usable for U-Boot at: 33ff0000
+Reserving 252k for U-Boot at: 33f00000
+Reserving 4096k for malloc() at: 33b00000
+Reserving 36 Bytes for Board Info at: 33afffdc
+Reserving 120 Bytes for Global Data at: 33afff64
+New Stack Pointer is: 33afff58
+RAM Configuration:
+Bank #0: 30000000 64 MiB
+relocation Offset is: 00000000
+WARNING: Caches not enabled
+monitor flash len: 000394D4
+dram_bank_mmu_setup: bank: 0
+Now running in RAM - U-Boot at: 33f00000
+Flash: fwc addr (null) cmd f0 00f0 16bit x 16 bit
+fwc addr 0000aaaa cmd aa 00aa 16bit x 16 bit
+fwc addr 00005554 cmd 55 0055 16bit x 16 bit
+fwc addr 0000aaaa cmd 90 0090 16bit x 16 bit
+fwc addr (null) cmd f0 00f0 16bit x 16 bit
+JEDEC PROBE: ID f0 ea00 0
+fwc addr (null) cmd ff 00ff 16bit x 16 bit
+fwc addr (null) cmd 90 0090 16bit x 16 bit
+fwc addr (null) cmd ff 00ff 16bit x 16 bit
+JEDEC PROBE: ID 90 ea00 0
+0 KB
+NAND:  board_nand_init()
+end of nand_init
+256 MiB
+NAND read from offset 40000 failed -74
+*** Warning - readenv() failed, using default environment
+
+Destroy Hash Table: 33f3998c table = (null)
+Create Hash Table: N=90
+INSERT: table 33f3998c, filled 1/97 rv 33b02a38 ==> name="bootargs" value="console=ttySAC0 root=/dev/mtdblock3"
+INSERT: table 33f3998c, filled 2/97 rv 33b02bac ==> name="bootcmd" value="nand read 30000000 kernel;bootm 30000000"
+INSERT: table 33f3998c, filled 3/97 rv 33b02bdc ==> name="bootdelay" value="5"
+INSERT: table 33f3998c, filled 4/97 rv 33b02a8c ==> name="baudrate" value="115200"
+INSERT: table 33f3998c, filled 5/97 rv 33b02e64 ==> name="ethaddr" value="00:0c:29:4d:e4:f4"
+INSERT: table 33f3998c, filled 6/97 rv 33b02a68 ==> name="ipaddr" value="192.168.1.17"
+INSERT: table 33f3998c, filled 7/97 rv 33b02e40 ==> name="serverip" value="192.168.1.3"
+INSERT: table 33f3998c, filled 8/97 rv 33b02c3c ==> name="netmask" value="255.255.255.0"
+INSERT: free(data = 33b02900)
+INSERT: done
+In:    serial
+Out:   serial
+Err:   serial
+Net:   dm9000
+hdelete: DELETE key "partition"
+
+---mtdparts_init---
+last_ids  : 
+env_ids   : nand0=jz2440-0
+last_parts: 
+env_parts : mtdparts=jz2440-0:256k(u-boot),128k(params),2m(kernel),-(rootfs)
+
+last_partition : 
+env_partition  : <NULL>
+
+---parse_mtdids---
+mtdids = nand0=jz2440-0
+
++ id nand0             268435456 bytes  jz2440-0
+
+---parse_mtdparts---
+mtdparts = mtdparts=jz2440-0:256k(u-boot),128k(params),2m(kernel),-(rootfs)
+
+--- current_save ---
+hdelete: DELETE key "partition"
+=> partition NULL
+--- index partitions ---
+hdelete: DELETE key "mtddevnum"
+hdelete: DELETE key "mtddevname"
+=> mtddevnum NULL
+=> mtddevname NULL
+===device_parse===
+--- id_find_by_mtd_id: 'jz2440-0' (len = 8)
+entry: 'jz2440-0' (len = 8)
+dev type = 2 (nand), dev num = 0, mtd-id = jz2440-0
+parsing partitions 256k(u-boot),128k(params),2m(kernel),-(rootfs)
+    + partition: name u-boot                 size 0x00040000 offset 0xffffffff mask flags 0
+    + partition: name params                 size 0x00020000 offset 0xffffffff mask flags 0
+    + partition: name kernel                 size 0x00200000 offset 0xffffffff mask flags 0
+    '-': remaining size assigned
+    + partition: name rootfs                 size 0xffffffff offset 0xffffffff mask flags 0
+    
+    total partitions: 4
+    part_sort_add: list empty
+    --- index partitions ---
+    hdelete: DELETE key "mtddevnum"
+    hdelete: DELETE key "mtddevname"
+    => mtddevnum NULL
+    => mtddevname NULL
+    --- index partitions ---
+    hdelete: DELETE key "mtddevnum"
+    hdelete: DELETE key "mtddevname"
+    => mtddevnum NULL
+    => mtddevname NULL
+    --- index partitions ---
+    hdelete: DELETE key "mtddevnum"
+    hdelete: DELETE key "mtddevname"
+    => mtddevnum NULL
+    => mtddevname NULL
+    --- index partitions ---
+    hdelete: DELETE key "mtddevnum"
+    hdelete: DELETE key "mtddevname"
+    => mtddevnum NULL
+    => mtddevname NULL
+    ===
+    
+    + device: nand  0       jz2440-0
+    --- current_save ---
+    => partition nand0,0
+    --- index partitions ---
+    
+    --- mtd_part_info: partition number 0 for device nand0 (jz2440-0)
+    => mtddevnum 0,
+    => mtddevname u-boot
+    mtdparts_init: current_mtd_dev  = nand0, current_mtd_partnum = 0
+### main_loop entered: bootdelay=5
+    
+### main_loop: bootcmd="nand read 30000000 kernel;bootm 30000000"
+    Hit any key to stop autoboot:  0 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # 
+    SMDK2410 # help
+    ?       - alias for 'help'
+    base    - print or set address offset
+    bdinfo  - print Board Info structure
+    boot    - boot default, i.e., run 'bootcmd'
+    bootd   - boot default, i.e., run 'bootcmd'
+    bootelf - Boot from an ELF image in memory
+    bootm   - boot application image from memory
+    bootp   - boot image via network using BOOTP/TFTP protocol
+    bootvx  - Boot vxWorks from an ELF image
+    chpart  - change active partition
+    cmp     - memory compare
+    coninfo - print console devices and information
+    cp      - memory copy
+    crc32   - checksum calculation
+    dcache  - enable or disable data cache
+    echo    - echo args to console
+    editenv - edit environment variable
+    env     - environment handling commands
+    erase   - erase FLASH memory
+    exit    - exit script
+    false   - do nothing, unsuccessfully
+    flinfo  - print FLASH memory information
+    go      - start application at address 'addr'
+    help    - print command description/usage
+    icache  - enable or disable instruction cache
+    iminfo  - print header information for application image
+    imls    - list all images found in flash
+    imxtract- extract a part of a multi-image
+    itest   - return true/false on integer compare
+    loadb   - load binary file over serial line (kermit mode)
+    loads   - load S-Record file over serial line
+    loady   - load binary file over serial line (ymodem mode)
+    loop    - infinite loop on address range
+    md      - memory display
+    mm      - memory modify (auto-incrementing address)
+    mtdparts- define flash/nand partitions
+    mtest   - simple RAM read/write test
+    mw      - memory write (fill)
+    nand    - NAND sub-system
+    nboot   - boot from NAND device
+    nfs     - boot image via network using NFS protocol
+    nm      - memory modify (constant address)
+    ping    - send ICMP ECHO_REQUEST to network host
+    printenv- print environment variables
+    protect - enable or disable FLASH write protection
+    reginfo - print register information
+    reset   - Perform RESET of the CPU
+    run     - run commands in an environment variable
+    saveenv - save environment variables to persistent storage
+    setenv  - set environment variables
+    showvar - print local hushshell variables
+    sleep   - delay execution for some time
+    source  - run script from memory
+    test    - minimal test like /bin/sh
+    tftpboot- boot image via network using TFTP protocol
+    true    - do nothing, successfully
+    version - print monitor, compiler and linker version
+    SMDK2410 # 
+    ''''''''""""""""""""""""""''''''""""""""""""""""""""""""""""""""""""""""
+
+struct in_str {
+	const char *p;
+	int __promptme;
+	int promptmode;
+	int (*get) (struct in_str *);
+	int (*peek) (struct in_str *);
+};
+int parse_string_outer(const char *s, int flag)
+{
+	struct in_str input;
+	char *p = NULL;
+	int rcode;
+	if ( !s || !*s)
+		return 1;
+	if (!(p = strchr(s, '\n')) || *++p) {
+		p = xmalloc(strlen(s) + 2);
+		strcpy(p, s);
+		strcat(p, "\n");
+		setup_string_in_str(&input, p);
+		rcode = parse_stream_outer(&input, flag);
+		free(p);
+		return rcode;
+	} else {
+	setup_string_in_str(&input, s);
+	return parse_stream_outer(&input, flag);
+	}
+}
+
+struct p_context {
+	struct child_prog *child;
+	struct pipe *list_head;
+	struct pipe *pipe;
+	reserved_style w;
+	int old_flag;				/* for figuring out valid reserved words */
+	struct p_context *stack;
+	int type;			/* define type of parser : ";$" common or special symbol */
+	/* How about quoting status? */
+};
+
+struct child_prog {
+	char **argv;				/* program name and arguments */
+	int    argc;                            /* number of program arguments */
+	struct pipe *group;			/* if non-NULL, first in group or subshell */
+	int sp;				/* number of SPECIAL_VAR_SYMBOL */
+	int type;
+};
+
+struct pipe {
+	int num_progs;				/* total number of programs in job */
+	struct child_prog *progs;	/* array of commands in pipe */
+	struct pipe *next;			/* to track background commands */
+	pipe_style followup;		/* PIPE_BG, PIPE_SEQ, PIPE_OR, PIPE_AND */
+	reserved_style r_mode;		/* supports if, for, while, until */
+};
+
+
+typedef struct {
+	char *data;
+	int length;
+	int maxlen;
+	int quote;
+	int nonnull;
+} o_string;
+
+
+struct child_prog {
+	char **argv;				/* program name and arguments */
+	int    argc;                            /* number of program arguments */
+	struct pipe *group;			/* if non-NULL, first in group or subshell */
+	int sp;				/* number of SPECIAL_VAR_SYMBOL */
+	int type;
+};
+
+
+void update_ifs_map(void)
+{
+	/* char *ifs and char map[256] are both globals. */
+	ifs = (uchar *)getenv("IFS");
+	if (ifs == NULL) ifs=(uchar *)" \t\n";
+	/* Precompute a list of 'flow through' behavior so it can be treated
+	 * quickly up front.  Computation is necessary because of IFS.
+	 * Special case handling of IFS == " \t\n" is not implemented.
+	 * The map[] array only really needs two bits each, and on most machines
+	 * that would be faster because of the reduced L1 cache footprint.
+	 */
+	memset(map,0,sizeof(map)); /* most characters flow through always */
+	mapset((uchar *)"\\$'\"", 3);       /* never flow through */
+	mapset((uchar *)";&|#", 1);         /* flow through if quoted */
+	mapset(ifs, 2);            /* also flow through if quoted */
+}
+
+static int done_command(struct p_context *ctx)
+{
+	/* The child is really already in the pipe structure, so
+	 * advance the pipe counter and make a new, null child.
+	 * Only real trickiness here is that the uncommitted
+	 * child structure, to which ctx->child points, is not
+	 * counted in pi->num_progs. */
+	struct pipe *pi=ctx->pipe;
+	struct child_prog *prog=ctx->child;
+
+	if (prog && prog->group == NULL
+		 && prog->argv == NULL) {
+		debug_printf("done_command: skipping null command\n");
+		return 0;
+	} else if (prog) {
+		pi->num_progs++;
+		debug_printf("done_command: num_progs incremented to %d\n",pi->num_progs);
+	} else {
+		debug_printf("done_command: initializing\n");
+	}
+	pi->progs = xrealloc(pi->progs, sizeof(*pi->progs) * (pi->num_progs+1));
+
+	prog = pi->progs + pi->num_progs;
+	prog->argv = NULL;
+	prog->group = NULL;
+	prog->sp = 0;
+	ctx->child = prog;
+	prog->type = ctx->type;
+
+	/* but ctx->pipe and ctx->list_head remain unchanged */
+	return 0;
+}
+
+static int done_pipe(struct p_context *ctx, pipe_style type)
+{
+	struct pipe *new_p;
+	done_command(ctx);  /* implicit closure of previous command */
+	debug_printf("done_pipe, type %d\n", type);
+	ctx->pipe->followup = type;
+	ctx->pipe->r_mode = ctx->w;
+	new_p=new_pipe();
+	ctx->pipe->next = new_p;
+	ctx->pipe = new_p;
+	ctx->child = NULL;
+	done_command(ctx);  /* set up new pipe to accept commands */
+	return 0;
+}
+static int done_word(o_string *dest, struct p_context *ctx)
+{
+	struct child_prog *child=ctx->child;
+	char *str, *s;
+	int argc, cnt;
+
+	debug_printf("done_word: %s %p\n", dest->data, child);
+	if (dest->length == 0 && !dest->nonnull) {
+		debug_printf("  true null, ignored\n");
+		return 0;
+	}
+		if (child->group) {
+			syntax();
+			return 1;  /* syntax error, groups and arglists don't mix */
+		}
+		if (!child->argv && (ctx->type & FLAG_PARSE_SEMICOLON)) {
+			debug_printf("checking %s for reserved-ness\n",dest->data);
+			if (reserved_word(dest,ctx)) return ctx->w==RES_SNTX;
+		}
+		for (cnt = 1, s = dest->data; s && *s; s++) {
+			if (*s == '\\') s++;
+			cnt++;
+		}
+		str = malloc(cnt); if (!str) return 1;
+		if ( child->argv == NULL) {
+			child->argc=0;
+		}
+		argc = ++child->argc;
+		child->argv = realloc(child->argv, (argc+1)*sizeof(*child->argv));
+		if (child->argv == NULL) return 1;
+		child->argv[argc-1]=str;
+		child->argv[argc]=NULL;
+		for (s = dest->data; s && *s; s++,str++) {
+			if (*s == '\\') s++;
+			*str = *s;
+		}
+		*str = '\0';
+
+	b_reset(dest);
+	if (ctx->w == RES_FOR) {
+		done_word(dest,ctx);
+		done_pipe(ctx,PIPE_SEQ);
+	}
+	return 0;
+}
+int parse_stream_outer(struct in_str *inp, int flag)
+{
+
+	struct p_context ctx;
+	o_string temp=NULL_O_STRING;
+	int rcode;
+	int code = 0;
+	do {
+		ctx.type = flag;
+		initialize_context(&ctx);
+		update_ifs_map();
+		if (!(flag & FLAG_PARSE_SEMICOLON) || (flag & FLAG_REPARSING)) mapset((uchar *)";$&|", 0);
+		inp->promptmode=1;
+		rcode = parse_stream(&temp, &ctx, inp, '\n');
+		if (rcode == 1) flag_repeat = 0;
+		if (rcode != 1 && ctx.old_flag != 0) {
+			syntax();
+			flag_repeat = 0;
+		}
+		if (rcode != 1 && ctx.old_flag == 0) {
+			done_word(&temp, &ctx);
+			done_pipe(&ctx,PIPE_SEQ);
+			code = run_list(ctx.list_head);
+			if (code == -2) {	/* exit */
+				b_free(&temp);
+				code = 0;
+				/* XXX hackish way to not allow exit from main loop */
+				if (inp->peek == file_peek) {
+					printf("exit not allowed from main input shell.\n");
+					continue;
+				}
+				break;
+			}
+			if (code == -1)
+			    flag_repeat = 0;
+		} else {
+			if (ctx.old_flag != 0) {
+				free(ctx.stack);
+				b_reset(&temp);
+			}
+			if (inp->__promptme == 0) printf("<INTERRUPT>\n");
+			inp->__promptme = 1;
+			temp.nonnull = 0;
+			temp.quote = 0;
+			inp->p = NULL;
+			free_pipe_list(ctx.list_head,0);
+		}
+		b_free(&temp);
+	} while (rcode != -1 && !(flag & FLAG_EXIT_FROM_LOOP));   /* loop on syntax errors, return on EOF */
+	return (code != 0) ? 1 : 0;
+}
+
+int parse_stream(o_string *dest, struct p_context *ctx,
+	struct in_str *input, int end_trigger)
+{
+	unsigned int ch, m;
+	int next;
+
+	/* Only double-quote state is handled in the state variable dest->quote.
+	 * A single-quote triggers a bypass of the main loop until its mate is
+	 * found.  When recursing, quote state is passed in via dest->quote. */
+
+	debug_printf("parse_stream, end_trigger=%d\n",end_trigger);
+	while ((ch=b_getch(input))!=EOF) {
+		m = map[ch];
+		if (input->__promptme == 0) return 1;
+		next = (ch == '\n') ? 0 : b_peek(input);
+
+		debug_printf("parse_stream: ch=%c (%d) m=%d quote=%d - %c\n",
+			ch >= ' ' ? ch : '.', ch, m,
+			dest->quote, ctx->stack == NULL ? '*' : '.');
+
+		if (m==0 || ((m==1 || m==2) && dest->quote)) {
+			b_addqchr(dest, ch, dest->quote);
+		} else {
+			if (m==2) {  /* unquoted IFS */
+				if (done_word(dest, ctx)) {
+					return 1;
+				}
+				/* If we aren't performing a substitution, treat a newline as a
+				 * command separator.  */
+				if (end_trigger != '\0' && ch=='\n')
+					done_pipe(ctx,PIPE_SEQ);
+			}
+			if (ch == end_trigger && !dest->quote && ctx->w==RES_NONE) {
+				debug_printf("leaving parse_stream (triggered)\n");
+				return 0;
+			}
+			if (m!=2) switch (ch) {
+		case '#':
+			if (dest->length == 0 && !dest->quote) {
+				while(ch=b_peek(input),ch!=EOF && ch!='\n') { b_getch(input); }
+			} else {
+				b_addqchr(dest, ch, dest->quote);
+			}
+			break;
+		case '\\':
+			if (next == EOF) {
+				syntax();
+				return 1;
+			}
+			b_addqchr(dest, '\\', dest->quote);
+			b_addqchr(dest, b_getch(input), dest->quote);
+			break;
+		case '$':
+			if (handle_dollar(dest, ctx, input)!=0) return 1;
+			break;
+		case '\'':
+			dest->nonnull = 1;
+			while(ch=b_getch(input),ch!=EOF && ch!='\'') {
+				if(input->__promptme == 0) return 1;
+				b_addchr(dest,ch);
+			}
+			if (ch==EOF) {
+				syntax();
+				return 1;
+			}
+			break;
+		case '"':
+			dest->nonnull = 1;
+			dest->quote = !dest->quote;
+			break;
+		case ';':
+			done_word(dest, ctx);
+			done_pipe(ctx,PIPE_SEQ);
+			break;
+		case '&':
+			done_word(dest, ctx);
+			if (next=='&') {
+				b_getch(input);
+				done_pipe(ctx,PIPE_AND);
+			} else {
+				syntax_err();
+				return 1;
+			}
+			break;
+		case '|':
+			done_word(dest, ctx);
+			if (next=='|') {
+				b_getch(input);
+				done_pipe(ctx,PIPE_OR);
+			} else {
+				/* we could pick up a file descriptor choice here
+				 * with redirect_opt_num(), but bash doesn't do it.
+				 * "echo foo 2| cat" yields "foo 2". */
+				syntax_err();
+				return 1;
+			}
+			break;
+		default:
+			syntax();   /* this is really an internal logic error */
+			return 1;
+			}
+		}
+	}
+	/* complain if quote?  No, maybe we just finished a command substitution
+	 * that was quoted.  Example:
+	 * $ echo "`cat foo` plus more"
+	 * and we just got the EOF generated by the subshell that ran "cat foo"
+	 * The only real complaint is if we got an EOF when end_trigger != '\0',
+	 * that is, we were really supposed to get end_trigger, and never got
+	 * one before the EOF.  Can't use the standard "syntax error" return code,
+	 * so that parse_stream_outer can distinguish the EOF and exit smoothly. */
+	debug_printf("leaving parse_stream (EOF)\n");
+	if (end_trigger != '\0') return -1;
+	return 0;
+}
+
+
+static int run_pipe_real(struct pipe *pi)
+{
+	int i;
+	int nextin;
+	int flag = do_repeat ? CMD_FLAG_REPEAT : 0;
+	struct child_prog *child;
+	char *p;
+	nextin = 0;
+
+	/* Check if this is a simple builtin (not part of a pipe).
+	 * Builtins within pipes have to fork anyway, and are handled in
+	 * pseudo_exec.  "echo foo | read bar" doesn't work on bash, either.
+	 */
+	if (pi->num_progs == 1) child = & (pi->progs[0]);
+		if (pi->num_progs == 1 && child->group) {
+		int rcode;
+		debug_printf("non-subshell grouping\n");
+		rcode = run_list_real(child->group);
+		return rcode;
+	} else if (pi->num_progs == 1 && pi->progs[0].argv != NULL) {
+		for (i=0; is_assignment(child->argv[i]); i++) { /* nothing */ }
+		if (i!=0 && child->argv[i]==NULL) {
+			/* assignments, but no command: set the local environment */
+			for (i=0; child->argv[i]!=NULL; i++) {
+
+				/* Ok, this case is tricky.  We have to decide if this is a
+				 * local variable, or an already exported variable.  If it is
+				 * already exported, we have to export the new value.  If it is
+				 * not exported, we need only set this as a local variable.
+				 * This junk is all to decide whether or not to export this
+				 * variable. */
+				int export_me=0;
+				char *name, *value;
+				name = xstrdup(child->argv[i]);
+				debug_printf("Local environment set: %s\n", name);
+				value = strchr(name, '=');
+				if (value)
+					*value=0;
+				free(name);
+				p = insert_var_value(child->argv[i]);
+				set_local_var(p, export_me);
+				if (p != child->argv[i]) free(p);
+			}
+			return EXIT_SUCCESS;   /* don't worry about errors in set_local_var() yet */
+		}
+		for (i = 0; is_assignment(child->argv[i]); i++) {
+			p = insert_var_value(child->argv[i]);
+			set_local_var(p, 0);
+			if (p != child->argv[i]) {
+				child->sp--;
+				free(p);
+			}
+		}
+		if (child->sp) {
+			char * str = NULL;
+
+			str = make_string((child->argv + i));
+			parse_string_outer(str, FLAG_EXIT_FROM_LOOP | FLAG_REPARSING);
+			free(str);
+			return last_return_code;
+		}
+		/* check ";", because ,example , argv consist from
+		 * "help;flinfo" must not execute
+		 */
+		if (strchr(child->argv[i], ';')) {
+			printf("Unknown command '%s' - try 'help' or use "
+					"'run' command\n", child->argv[i]);
+			return -1;
+		}
+		/* Process the command */
+		return cmd_process(flag, child->argc, child->argv,
+				   &flag_repeat);
+	}
+	return -1;
+}
+
+static int run_list_real(struct pipe *pi)
+{
+	char *save_name = NULL;
+	char **list = NULL;
+	char **save_list = NULL;
+	struct pipe *rpipe;
+	int flag_rep = 0;
+	int rcode=0, flag_skip=1;
+	int flag_restore = 0;
+	int if_code=0, next_if_code=0;  /* need double-buffer to handle elif */
+	reserved_style rmode, skip_more_in_this_rmode=RES_XXXX;
+	/* check syntax for "for" */
+	for (rpipe = pi; rpipe; rpipe = rpipe->next) {
+		if ((rpipe->r_mode == RES_IN ||
+		    rpipe->r_mode == RES_FOR) &&
+		    (rpipe->next == NULL)) {
+				syntax();
+				return 1;
+		}
+		if ((rpipe->r_mode == RES_IN &&
+			(rpipe->next->r_mode == RES_IN &&
+			rpipe->next->progs->argv != NULL))||
+			(rpipe->r_mode == RES_FOR &&
+			rpipe->next->r_mode != RES_IN)) {
+				syntax();
+				flag_repeat = 0;
+				return 1;
+		}
+	}
+	for (; pi; pi = (flag_restore != 0) ? rpipe : pi->next) {
+		if (pi->r_mode == RES_WHILE || pi->r_mode == RES_UNTIL ||
+			pi->r_mode == RES_FOR) {
+				/* check Ctrl-C */
+				ctrlc();
+				if ((had_ctrlc())) {
+					return 1;
+				}
+				flag_restore = 0;
+				if (!rpipe) {
+					flag_rep = 0;
+					rpipe = pi;
+				}
+		}
+		rmode = pi->r_mode;
+		debug_printf("rmode=%d  if_code=%d  next_if_code=%d skip_more=%d\n", rmode, if_code, next_if_code, skip_more_in_this_rmode);
+		if (rmode == skip_more_in_this_rmode && flag_skip) {
+			if (pi->followup == PIPE_SEQ) flag_skip=0;
+			continue;
+		}
+		flag_skip = 1;
+		skip_more_in_this_rmode = RES_XXXX;
+		if (rmode == RES_THEN || rmode == RES_ELSE) if_code = next_if_code;
+		if (rmode == RES_THEN &&  if_code) continue;
+		if (rmode == RES_ELSE && !if_code) continue;
+		if (rmode == RES_ELIF && !if_code) break;
+		if (rmode == RES_FOR && pi->num_progs) {
+			if (!list) {
+				/* if no variable values after "in" we skip "for" */
+				if (!pi->next->progs->argv) continue;
+				/* create list of variable values */
+				list = make_list_in(pi->next->progs->argv,
+					pi->progs->argv[0]);
+				save_list = list;
+				save_name = pi->progs->argv[0];
+				pi->progs->argv[0] = NULL;
+				flag_rep = 1;
+			}
+			if (!(*list)) {
+				free(pi->progs->argv[0]);
+				free(save_list);
+				list = NULL;
+				flag_rep = 0;
+				pi->progs->argv[0] = save_name;
+				continue;
+			} else {
+				/* insert new value from list for variable */
+				if (pi->progs->argv[0])
+					free(pi->progs->argv[0]);
+				pi->progs->argv[0] = *list++;
+			}
+		}
+		if (rmode == RES_IN) continue;
+		if (rmode == RES_DO) {
+			if (!flag_rep) continue;
+		}
+		if ((rmode == RES_DONE)) {
+			if (flag_rep) {
+				flag_restore = 1;
+			} else {
+				rpipe = NULL;
+			}
+		}
+		if (pi->num_progs == 0) continue;
+		rcode = run_pipe_real(pi);
+		debug_printf("run_pipe_real returned %d\n",rcode);
+		if (rcode < -1) {
+			last_return_code = -rcode - 2;
+			return -2;	/* exit */
+		}
+		last_return_code=(rcode == 0) ? 0 : 1;
+		if ( rmode == RES_IF || rmode == RES_ELIF )
+			next_if_code=rcode;  /* can be overwritten a number of times */
+		if (rmode == RES_WHILE)
+			flag_rep = !last_return_code;
+		if (rmode == RES_UNTIL)
+			flag_rep = last_return_code;
+		if ( (rcode==EXIT_SUCCESS && pi->followup==PIPE_OR) ||
+		     (rcode!=EXIT_SUCCESS && pi->followup==PIPE_AND) )
+			skip_more_in_this_rmode=rmode;
+	}
+	return rcode;
+}
+
+static int run_list(struct pipe *pi)
+{
+	int rcode=0;
+		rcode = run_list_real(pi);
+	/* free_pipe_list has the side effect of clearing memory
+	 * In the long run that function can be merged with run_list_real,
+	 * but doing that now would hobble the debugging effort. */
+	free_pipe_list(pi,0);
+	return rcode;
+}
+
+
+enum command_ret_t cmd_process(int flag, int argc, char * const argv[],
+			       int *repeatable)
+{
+	enum command_ret_t rc = CMD_RET_SUCCESS;
+	cmd_tbl_t *cmdtp;
+
+	/* Look up command in command table */
+	cmdtp = find_cmd(argv[0]);
+	if (cmdtp == NULL) {
+		printf("Unknown command '%s' - try 'help'\n", argv[0]);
+		return 1;
+	}
+
+	/* found - check max args */
+	if (argc > cmdtp->maxargs)
+		rc = CMD_RET_USAGE;
+
+
+	/* If OK so far, then do the command */
+	if (!rc) {
+		rc = cmd_call(cmdtp, flag, argc, argv);
+		*repeatable &= cmdtp->repeatable;
+	}
+	if (rc == CMD_RET_USAGE)
+		rc = cmd_usage(cmdtp);
+	return rc;
+}
+
+struct cmd_tbl_s {
+	char		*name;		/* Command Name			*/
+	int		maxargs;	/* maximum number of arguments	*/
+	int		repeatable;	/* autorepeat allowed?		*/
+					/* Implementation function	*/
+	int		(*cmd)(struct cmd_tbl_s *, int, int, char * const []);
+	char		*usage;		/* Usage message	(short)	*/
+#ifdef	CONFIG_SYS_LONGHELP
+	char		*help;		/* Help  message	(long)	*/
+#endif
+#ifdef CONFIG_AUTO_COMPLETE
+	/* do auto completion on the arguments */
+	int		(*complete)(int argc, char * const argv[], char last_char, int maxv, char *cmdv[]);
+#endif
+};
+
+struct in_str {
+	const char *p;
+	int __promptme;
+	int promptmode;
+	int (*get) (struct in_str *);
+	int (*peek) (struct in_str *);
+};
+
+
+
+typedef struct {
+	char *data;
+	int length;
+	int maxlen;
+	int quote;
+	int nonnull;
+} o_string;
+
+struct p_context {
+	struct child_prog *child;
+	struct pipe *list_head;
+	struct pipe *pipe;
+	reserved_style w;
+	int old_flag;				/* for figuring out valid reserved words */
+	struct p_context *stack;
+	int type;			/* define type of parser : ";$" common or special symbol */
+	/* How about quoting status? */
+};
+
+
+struct pipe {
+	int num_progs;				/* total number of programs in job */
+	struct child_prog *progs;	/* array of commands in pipe */
+	struct pipe *next;			/* to track background commands */
+	pipe_style followup;		/* PIPE_BG, PIPE_SEQ, PIPE_OR, PIPE_AND */
+	reserved_style r_mode;		/* supports if, for, while, until */
+};
+
+static int done_command(struct p_context *ctx)
+{
+	/* The child is really already in the pipe structure, so
+	 * advance the pipe counter and make a new, null child.
+	 * Only real trickiness here is that the uncommitted
+	 * child structure, to which ctx->child points, is not
+	 * counted in pi->num_progs. */
+	struct pipe *pi=ctx->pipe;
+	struct child_prog *prog=ctx->child;
+
+	if (prog && prog->group == NULL
+		 && prog->argv == NULL
+										) {
+		debug_printf("done_command: skipping null command\n");
+		return 0;
+	} else if (prog) {
+		pi->num_progs++;
+		debug_printf("done_command: num_progs incremented to %d\n",pi->num_progs);
+	} else {
+		debug_printf("done_command: initializing\n");
+	}
+	pi->progs = xrealloc(pi->progs, sizeof(*pi->progs) * (pi->num_progs+1));
+
+	prog = pi->progs + pi->num_progs;
+	prog->argv = NULL;
+	prog->group = NULL;
+	prog->sp = 0;
+	ctx->child = prog;
+	prog->type = ctx->type;
+
+	/* but ctx->pipe and ctx->list_head remain unchanged */
+	return 0;
+}
+
+
+static int done_pipe(struct p_context *ctx, pipe_style type)
+{
+	struct pipe *new_p;
+	done_command(ctx);  /* implicit closure of previous command */
+	debug_printf("done_pipe, type %d\n", type);
+	ctx->pipe->followup = type;
+	ctx->pipe->r_mode = ctx->w;
+	new_p=new_pipe();
+	ctx->pipe->next = new_p;
+	ctx->pipe = new_p;
+	ctx->child = NULL;
+	done_command(ctx);  /* set up new pipe to accept commands */
+	return 0;
+}
+
+void update_ifs_map(void)
+{
+	/* char *ifs and char map[256] are both globals. */
+	ifs = (uchar *)getenv("IFS");
+	if (ifs == NULL) ifs=(uchar *)" \t\n";
+	/* Precompute a list of 'flow through' behavior so it can be treated
+	 * quickly up front.  Computation is necessary because of IFS.
+	 * Special case handling of IFS == " \t\n" is not implemented.
+	 * The map[] array only really needs two bits each, and on most machines
+	 * that would be faster because of the reduced L1 cache footprint.
+	 */
+	memset(map,0,sizeof(map)); /* most characters flow through always */
+	mapset((uchar *)"\\$'\"", 3);       /* never flow through */
+	mapset((uchar *)";&|#", 1);         /* flow through if quoted */
+	mapset(ifs, 2);            /* also flow through if quoted */
+}
+
+run_command(const char *cmd, int flag)
+    parse_string_outer(cmd,FLAG_PARSE_SEMICOLON | FLAG_EXIT_FROM_LOOP)
+        //定义了_U_BOOT
+	   setup_string_in_str(&input, p);
+	   parse_stream_outer(&input, flag);
+            initialize_context(&ctx);
+	        update_ifs_map();
+	        done_word(&temp, &ctx);
+	        done_pipe(&ctx,PIPE_SEQ);
+	        run_list(ctx.list_head);
+		        run_list_real(pi);
+                    run_pipe_real(pi)
+                        cmd_process(flag, child->argc, child->argv,&flag_repeat)
+                            find_cmd(argv[0])
+                            cmd_call(cmdtp, flag, argc, argv)
